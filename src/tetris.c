@@ -14,3 +14,11 @@ static const uint16_t ROTATIONS[7][4] = {
     {0x2E00, 0x4460, 0x0E80, 0xC440}  // L
 };
 
+// kollar inom rutan r,c vilka platser blocken faktiskt sitter på
+static bool shape_has_block(PieceType type, uint8_t rot, int r, int c) {
+    if(type == CELL_EMPTY) return false;
+    uint16_t mask = ROTATIONS[type - 1][rot & 3]; // hämtar ut biten binärt, -1 för att vi saknar CELL_EMPTY och maskar med 3 för att hålla roationen mellan 0 och 3
+    int bit_index = 15 - (r * 4 + c); // omvandlar bitindex från 2d till 1d
+    return (mask >> bit_index) & 1;
+}
+
