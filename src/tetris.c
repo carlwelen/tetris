@@ -81,3 +81,23 @@ static void spawn_piece(GameState *state) {
 
     if (!is_valid_position(state, state->current)) state->game_over = true;
 }
+
+
+/*
+tömmer brädet sätter, återstället score, level och gameover bool, 
+spawnar en ny tetromino samt sätter dirty till true så att skrämen ska uppdatera
+*/
+void tetris_init(GameState *state) {
+    for (int y = 0; y < BOARD_HEIGHT; y++) {
+        for (int x = 0; x < BOARD_WIDTH; x++) {
+            state->board[y][x] = CELL_EMPTY;
+        }
+    }
+    state->score = 0;
+    state->level = 1;
+    state->game_over = false;
+
+    state->next.type = random_piece_type();
+    spawn_piece(state);
+    state->dirty = true;
+}
