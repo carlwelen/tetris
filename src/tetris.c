@@ -22,3 +22,19 @@ static bool shape_has_block(PieceType type, uint8_t rot, int r, int c) {
     return (mask >> bit_index) & 1;
 }
 
+
+/*
+https://stackoverflow.com/questions/7602919/how-do-i-generate-random-numbers-without-rand-function
+LSFR (Linear Feedback Shift Register)
+för att undvika att använda rand()
+kör XOR på bit 0,2,3,5 ; maskar så vi får sista biten
+"puttar av" sista biten och lägger till den maskade biten längsfram
+mod 7 för att få 0-6 sen +1 för att få index på tetrominon
+*/
+static uint16_t lsfr = 0xACE1u;
+
+static PieceType random_piece_type(void) {
+    uint16_t bit = ((lsfr >> 0) ^ (lsfr >> 2) ^ (lsfr >> 3) ^ (lsfr >> 5)) & 1;
+    lsfr = (lsfr >> 1) | (bit << 15);
+    return (PieceType)((lsfr % 7) + 1);
+}
