@@ -63,3 +63,21 @@ static bool is_valid_position(const GameState *state, Piece p) {
     }
     return true;
 }
+
+
+/*
+spawnar in nya tetrominor högst upp på planen i mitten med rot 0
+kollar även om biten direkt spawnar i ett annat block då är spelet slut
+har inte testat än så vet inte om den täcker alla fall för game over
+*/
+static void spawn_piece(GameState *state) {
+    state->current = state->next;
+    state->current.x = 3;
+    state->current.y = 0; // 0 just nu för att, kanske skaffa buffert sen för att spawna in dem ovanför
+    state->current.rotation = 0;
+
+    state->next.type = random_piece_type();
+    state->next.rotation = 0;
+
+    if (!is_valid_position(state, state->current)) state->game_over = true;
+}
