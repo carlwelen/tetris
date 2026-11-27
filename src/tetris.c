@@ -101,3 +101,18 @@ void tetris_init(GameState *state) {
     spawn_piece(state);
     state->dirty = true;
 }
+
+
+/*
+försöker flytta biten sidledes med dx genom att använda sim som kollar
+om det får plats innan den flyttas
+*/
+void tetris_horizontal_move(GameState *state, int8_t dx) {
+    Piece sim = state->current;
+    sim.x += dx;
+
+    if(is_valid_position(state, sim)) {
+        state->current = sim;
+        state->dirty = true;
+    }
+}
