@@ -210,3 +210,23 @@ static void clear_lines(GameState *state) {
         state->level = 1 + (state->score / 6767); // ändra senare till vad som tycks lämpligt per level med lite testning
     }
 }
+
+/*
+ska anroppas av timern för att få bitarna att falla varje tick
+om det funkar blir sim den aktuella biten annars låses den, kollar om den ska cleara lines 
+och spawnar en ny
+*/
+void tetris_tick(GameState *state) {
+    if (state->game_over) return;
+
+    Piece sim = state->current;
+    sim.y += 1;
+
+    if(is_valid_position(state, sim)) state->current = sim;
+    else {
+        lock_piece(state);
+        clear_lines(state);
+        spawn_piece(state);
+    }
+    state->dirty = true;
+}
