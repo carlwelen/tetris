@@ -167,3 +167,38 @@ void tetris_rotate(GameState *state) {
         }
     }
 }
+
+static void clear_lines(GameState *state) {
+    static const uint32_t POINTS[5] = {0, 55, 200, 520, 888};
+    uint8_t lines_clear = 0;
+
+    for(int y = BOARD_HEIGHT - 1; y >= 0; y--) {
+        bool full = true;
+
+        for(int x = 0; x < BOARD_WIDTH; x++) {
+            if(state->board[y][x] == CELL_EMPTY) {
+                full = false;
+                break;
+            }
+        }
+        if(full) {
+            lines_clear++;
+
+            //flyttar ner raderna
+            for (int row = y; row > 0; row--) {
+                for(int x = 0; x < BOARD_WIDTH; x++) {
+                    state->board[row][x] = state->board[row - 1][x];
+                }
+            }
+            // städa upp den översta raden
+            for(int x = 0; x < BOARD_WIDTH; x++) {
+                state->board[0][x] = CELL_EMPTY;
+            }
+            y++; //stanna på samma rad eftersom raderna ramlat ner
+        }
+    }
+    if (lines_clear > 0) {
+        state->score =+ POINTS[lines_clear] * state->level;
+        state->level = 1 + (state->score / 6767); // ändra senare till vad som tycks lämpligt per level med lite testning
+    }
+}
