@@ -64,6 +64,25 @@ static bool is_valid_position(const GameState *state, Piece p) {
     return true;
 }
 
+/*
+skriver in biten och låser den i spelplanen med hjälp av shape_has_block
+*/
+static void lock_piece(GameState *state) {
+    Piece p = state->current;
+
+    for(int r = 0; r < 4; r++){
+        for(int c = 0; c < 4; c++) {
+            if (shape_has_block(p.type, p.rotation, r, c)) {
+                int board_x = p.x + c;
+                int board_y = p.y + r;
+                if(board_y >= 0 && board_y < BOARD_HEIGHT && board_x >= 0 && board_x < BOARD_WIDTH) {
+                    state->board[board_y][board_x] = p.type;
+                }
+            }
+        }
+    }
+}
+
 
 /*
 spawnar in nya tetrominor högst upp på planen i mitten med rot 0
