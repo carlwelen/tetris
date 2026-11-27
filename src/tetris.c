@@ -168,6 +168,14 @@ void tetris_rotate(GameState *state) {
     }
 }
 
+
+/*
+tömmer rader om de är full, löper igenom spelplanen och letar efter fulla rader
+flyttar ner raderna om det behövs, tömmer de över raderna så det inte blir kopior
+omvandlar till poäng med hjälp av listan POINTS och kan öka leveln
+ändra variabeln 6767 senare efter testning till vad som känns som rimlig tid att
+det ska börja gå snabbare
+*/
 static void clear_lines(GameState *state) {
     static const uint32_t POINTS[5] = {0, 55, 200, 520, 888};
     uint8_t lines_clear = 0;
