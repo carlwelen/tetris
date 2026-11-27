@@ -106,13 +106,44 @@ void tetris_init(GameState *state) {
 /*
 försöker flytta biten sidledes med dx genom att använda sim som kollar
 om det får plats innan den flyttas
+om game_over == true kommer den returnera direkt
 */
 void tetris_horizontal_move(GameState *state, int8_t dx) {
+    if (state->game_over) return;
+    
     Piece sim = state->current;
     sim.x += dx;
 
     if(is_valid_position(state, sim)) {
         state->current = sim;
         state->dirty = true;
+    }
+}
+
+/*
+försöker rotera biten genom att simlulera sim om det går
+testar även offsets så att den inte roterar in i väggar och knuffas ut
+om game_over == true kommer den returnera direkt
+just nu roterar den bara positivt men kan införa dx senare vid behov
+*/
+void tetris_rotate(GameState *state) {
+    if (state->game_over) return;
+
+    /*
+    lista med förskjutningar att testa så de knuffas ut från väggen
+    bara I biten som kan behöva +-2
+    */
+    static const int8_t wall_kicks[] = {0, -1, 1, -2, 2};
+    uint8_t next_rot = (state->current.rotation + 1) & 3;
+
+    for(int i = 0; i < 5; i++) {
+        Piece sim = state->current;
+        sim.rotation = next_rot;
+        sim.x += wall_kicks[1];
+
+        if(is_valid_position(state, sim)) {
+            state->current = sim;
+            state->dirty = true;
+        }
     }
 }
