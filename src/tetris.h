@@ -42,7 +42,7 @@ typedef struct {
 void tetris_init(GameState *state);
 void tetris_move_horizontal(GameState *state, int8_t dx); // dx = -1 (vänster) eller +1 (höger)
 void tetris_rotate(GameState *state);
-void tetris_soft_drop(GameState *state);
+void tetris_fast_drop(GameState *state);
 void tetris_tick(GameState *state); // Anropas vid timerns tick som fungerar som gravitationen
 
 #endif

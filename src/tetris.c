@@ -230,3 +230,23 @@ void tetris_tick(GameState *state) {
     }
     state->dirty = true;
 }
+
+/*
+ska manuellt kunna hållas för att få biten att droppas snabbare
+om den har plats att ramla görs det annars anroppas
+tick funktionen där logiken för att låsa den redan finns
+*/
+void tetris_fast_drop(GameState *state) {
+   if (state->game_over) return;
+   
+   Piece sim = state->current;
+   sim.y++;
+
+   if (is_valid_position(state, sim)) {
+    state->current = sim;
+    state->dirty = true;
+   }
+   else {
+    tetris_tick(state);
+   }
+}
