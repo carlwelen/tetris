@@ -57,7 +57,7 @@ static bool is_valid_position(const GameState *state, Piece p) {
 
             if (board_x < 0 || board_x >= BOARD_WIDTH || board_y >= BOARD_HEIGHT) return false;
 
-            if (board_y >= 0 && state->board[board_x][board_y] != CELL_EMPTY) return false;
+            if (board_y >= 0 && state->board[board_y][board_x] != CELL_EMPTY) return false;
         }
 
     }
@@ -127,7 +127,7 @@ försöker flytta biten sidledes med dx genom att använda sim som kollar
 om det får plats innan den flyttas
 om game_over == true kommer den returnera direkt
 */
-void tetris_horizontal_move(GameState *state, int8_t dx) {
+void tetris_move_horizontal(GameState *state, int8_t dx) {
     if (state->game_over) return;
     
     Piece sim = state->current;
@@ -158,11 +158,12 @@ void tetris_rotate(GameState *state) {
     for(int i = 0; i < 5; i++) {
         Piece sim = state->current;
         sim.rotation = next_rot;
-        sim.x += wall_kicks[1];
+        sim.x += wall_kicks[i];
 
         if(is_valid_position(state, sim)) {
             state->current = sim;
             state->dirty = true;
+            return;
         }
     }
 }
